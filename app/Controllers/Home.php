@@ -35,6 +35,6 @@ class Home extends BaseController
             'video' => $video,
         ];
 
-        return view('home', $data);
+        return view('Home', $data);
     }
 }

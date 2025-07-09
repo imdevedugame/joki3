@@ -93,9 +93,24 @@
     </form>
 
     <!-- Tombol Export -->
-    <div class="mb-4">
-        <a href="<?= base_url('admin/laporan/pdf') ?>" class="btn btn-danger me-2"><i class="fas fa-file-pdf"></i> Export PDF</a>
-        <a href="<?= base_url('admin/laporan/excel') ?>" class="btn btn-success"><i class="fas fa-file-excel"></i> Export Excel</a>
+    <div class="mb-4 d-flex gap-2">
+        <!-- Export PDF -->
+        <form action="<?= base_url('admin/laporan/exportPdf') ?>" method="get">
+            <input type="hidden" name="from" value="<?= esc($from ?? '') ?>">
+            <input type="hidden" name="to" value="<?= esc($to ?? '') ?>">
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-file-pdf"></i> Export PDF
+            </button>
+        </form>
+
+        <!-- Export Excel -->
+        <form action="<?= base_url('admin/laporan/exportExcel') ?>" method="get">
+            <input type="hidden" name="from" value="<?= esc($from ?? '') ?>">
+            <input type="hidden" name="to" value="<?= esc($to ?? '') ?>">
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-file-excel"></i> Export Excel
+            </button>
+        </form>
     </div>
 
     <!-- Tabel Laporan -->

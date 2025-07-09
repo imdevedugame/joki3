@@ -24,13 +24,13 @@
         <tbody>
             <?php foreach ($pesanan as $i => $p): ?>
             <tr>
-                <td><?= $i+1 ?></td>
+                <td><?= $i + 1 ?></td>
                 <td><?= $p['id_member'] ?></td>
                 <td><?= $p['tanggal_pesan'] ?></td>
-                <td>Rp<?= number_format($p['total_harga']) ?></td>
+                <td>Rp<?= number_format($p['total_harga'], 0, ',', '.') ?></td>
                 <td><?= $p['status_pembayaran'] ?></td>
             </tr>
-            <?php endforeach ?>
+            <?php endforeach; ?>
         </tbody>
     </table>
 </body>

@@ -51,6 +51,25 @@
         color: white;
     }
 
+    .btn-back {
+        background-color: #6b21a8;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 14px;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 20px;
+    }
+
+    .btn-back:hover {
+        background-color: #4c1d95;
+        color: white;
+    }
+
     .alert {
         max-width: 600px;
         margin: 20px auto;
@@ -58,6 +77,11 @@
 </style>
 
 <div class="container py-3">
+
+    <!-- ✅ Tombol Back -->
+    <a href="<?= base_url('homestay') ?>" class="btn-back">
+        <i class="fas fa-arrow-left"></i> Kembali
+    </a>
 
     <h3>Checkout Pemesanan Homestay</h3>
 

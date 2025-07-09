@@ -4,16 +4,24 @@ namespace App\Controllers;
 
 use App\Models\HomestayModel;
 use App\Models\PemesananHomestayModel;
-use App\Models\PesananModel;
 
 class HomestayController extends BaseController
 {
     public function index()
     {
         $homestayModel = new HomestayModel();
-        $homestays = $homestayModel->findAll();
+        $keyword = $this->request->getGet('keyword');
 
-        return view('homestay/index', ['homestays' => $homestays]);
+        if ($keyword) {
+            $homestays = $homestayModel->like('nama_homestay', $keyword)->findAll();
+        } else {
+            $homestays = $homestayModel->findAll();
+        }
+
+        return view('homestay/index', [
+            'homestays' => $homestays,
+            'keyword' => $keyword
+        ]);
     }
 
     public function pesan($id)
@@ -48,32 +56,28 @@ class HomestayController extends BaseController
     }
 
     public function checkout()
-{
-    $db = \Config\Database::connect();
-    $builder = $db->table('pemesanan_homestay');
-    
-    $builder->select('
-        pemesanan_homestay.*,
-        homestay.nama_homestay,
-        homestay.harga,
-        pemesanan_homestay.file_bukti,
-        pemesanan_homestay.tanggal_upload,
-        pemesanan_homestay.status AS status_pembayaran
-    ');
-    
-    // ✅ JOIN hanya ke tabel homestay
-    $builder->join('homestay', 'homestay.id_homestay = pemesanan_homestay.id_homestay');
-    
-    // ✅ Filter hanya data member yang login
-    $builder->where('pemesanan_homestay.id_member', session()->get('id_member'));
-    
-    $query = $builder->get();
+    {
+        $db = \Config\Database::connect();
+        $builder = $db->table('pemesanan_homestay');
+        
+        $builder->select('
+            pemesanan_homestay.*,
+            homestay.nama_homestay,
+            homestay.harga,
+            pemesanan_homestay.file_bukti,
+            pemesanan_homestay.tanggal_upload,
+            pemesanan_homestay.status AS status_pembayaran
+        ');
+        
+        $builder->join('homestay', 'homestay.id_homestay = pemesanan_homestay.id_homestay');
+        $builder->where('pemesanan_homestay.id_member', session()->get('id_member'));
+        
+        $query = $builder->get();
 
-    $data['pemesanan'] = $query->getResultArray();
+        $data['pemesanan'] = $query->getResultArray();
 
-    return view('homestay/checkout', $data);
-}
-
+        return view('homestay/checkout', $data);
+    }
 
     public function simpanPembayaran()
     {
@@ -91,9 +95,8 @@ class HomestayController extends BaseController
         $newName = $file->getRandomName();
         $file->move('uploads/bukti_homestay/', $newName);
 
-        $model = new \App\Models\PesananModel();
-        $model->insert([
-            'id_pemesanan_homestay' => $this->request->getPost('id_pemesanan_homestay'),
+        $pemesananModel = new PemesananHomestayModel();
+        $pemesananModel->update($this->request->getPost('id_pemesanan_homestay'), [
             'file_bukti' => $newName,
             'tanggal_upload' => date('Y-m-d H:i:s'),
             'status' => 'Menunggu Konfirmasi'
